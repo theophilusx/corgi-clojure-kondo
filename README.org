@@ -1,0 +1,82 @@
+* corgi-clojure-kondo
+
+This is a very simple extension package for [[https://github.com/corgi-emacs/corgi][Corgi emacs]] which adds support for
+[[https://github.com/clj-kondo/clj-kondo][clj-kondo]] using ~flymake~. This package is not part of ~corgi emacs~, but it is
+defined to work in collaboration with that emacs configuration framework. 
+
+** Install
+
+As ~corgi~ uses [[https://github.com/radian-software/straight.el][straight.el]] to install packages and ~use-package~ to manage configuration, you can install this module by adding the following to your corgi ~init.el~ file.
+
+#+begin_src emacs-lisp
+  (use-package corgi-clojure-kondo
+    :straight (:host github :repo "theophilusx/corgi-clojure-kondo")
+    :hook ((clojure-mode . (lambda () (flymake-mode +1)))))
+
+#+end_src
+
+** TODO
+
+The main task left to sort out is how best to handle new key bindings and
+signals introduced by an extension package for corgi. At this time, no bindings
+are defined, so your advised to add them to your ~user-keys.el~ and
+~user-signals.el~ files using whatever bindings you find convenient. Currently, I
+use the following.
+
+In ~user-keys.el~
+
+#+begin_src emacs-lisp
+  (normal|visual
+   ...
+   ("j"
+    ("n" "Next error" :jump/next-error)
+    ("p" "Previous error" :jump/prev-error))
+   ("p"
+    ("d" "Lint Diagnostics" :project/diagnostics))
+   ("t"
+    ("l" "Toggle line numbers" display-line-numbers-mode)
+    ("L" "Toggle linter" flymake-mode))
+   ...
+   )
+#+end_src
+
+and in your ~user-signals.el~ file add
+
+#+begin_src emacs-lisp
+  ((default (
+             ...
+             :jump/next-error flymake-goto-next-error
+             :jump/prev-error flymake-goto-prev-error
+             ...
+             :project/diagnostics consult-flymake
+             ...
+             )))
+
+#+end_src
+
+*Note:* The above are just /suggestions/. You can define whatever bindings and
+ signals you find most conenient. The precise default key bindings for ~corgi~ and
+ the specific mechanism for extension packages to add or update bindings is
+ still being worked through. This README will be updated once more concrete
+ suggestions are formulated.
+
+** Issues
+
+Any issues you encounter should with using this package should be logged against
+the ~corgi-clojure-kondo~ package. If you are certain the issue is related to the
+~corgi~ base packages, then log the issue with the [[https://github.com/corgi-emacs/corgi][corgi]] repository. If your
+uncertain whether the issue is with ~corgi-clojure-kondo~ or ~corgi~, log the issue
+with this repository and I will assess and refile when necessary.
+
+When lodging an issue, please ensure you include the version of Emacs your
+running and what platform you are running on. Please also note that I tend not
+to immediately investigate issues associated with the current development
+versions of Emacs. As that version is a moving target, I will tend to leave
+issues and wait to see if they are resolved with later updates to the Emacs code
+base.
+
+** Pull Requests 
+
+All PRs are welcomed. The aim is to keep this package as simple as possible,
+with minimal opinionated configuration. Note that all documentation is placed in
+the README, which is an Emacs org file.
