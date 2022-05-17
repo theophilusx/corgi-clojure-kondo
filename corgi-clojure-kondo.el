@@ -16,11 +16,14 @@
 ;;
 ;;; Code:
 
+(require 'use-package)
+
 (use-package flymake
   :config
   (remove-hook 'flymake-diagnostic-functions #'flymake-proc-legacy-flymake))
 
 (use-package flymake-kondor
+  :after (flymake)
   :config
   (add-hook 'clojure-mode-hook (lambda ()
 	                         (flymake-kondor-setup))))
