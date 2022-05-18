@@ -15,50 +15,38 @@ As ~corgi~ uses [[https://github.com/radian-software/straight.el][straight.el]] 
 
 #+end_src
 
+This package also sets up some key bindings. However, the current implementation
+is a definite /hack/, but seems to work OK. Once we have something a little more
+elegant, I will update this package accordingly.
+
+As it currently stands, you need to add two additional blocks of code to your
+~init.el~ file. Add the following to your ~init.el~ file *BEFORE* loading
+~corgi-clojure-kondo~.
+
+#+begin_src emacs-lisp
+  ;; Add default key and signal files to global lists
+  (defvar *key-files-list* (list 'corgi-keys 'user-keys)
+    "List of corkey key definition files.")
+
+  (defvar *signal-files-list* (list 'corgi-signals 'user-signals)
+    "List of corkey signal definition files.")
+
+#+end_src
+
+At the end of your ~init.el~, add the following
+
+#+begin_src emacs-lisp
+  ;; Load the corkey key and signal definitions and
+  ;; watch for changes
+  (corkey/load-and-watch *key-files-list* *signal-files-list*)
+
+#+end_src
+
 ** TODO
 
 The main task left to sort out is how best to handle new key bindings and
-signals introduced by an extension package for corgi. At this time, no bindings
-are defined, so your advised to add them to your ~user-keys.el~ and
-~user-signals.el~ files using whatever bindings you find convenient. Currently, I
-use the following.
-
-In ~user-keys.el~
-
-#+begin_src emacs-lisp
-  (normal|visual
-   ...
-   ("j"
-    ("n" "Next error" :jump/next-error)
-    ("p" "Previous error" :jump/prev-error))
-   ("p"
-    ("d" "Lint Diagnostics" :project/diagnostics))
-   ("t"
-    ("l" "Toggle line numbers" display-line-numbers-mode)
-    ("L" "Toggle linter" flymake-mode))
-   ...
-   )
-#+end_src
-
-and in your ~user-signals.el~ file add
-
-#+begin_src emacs-lisp
-  ((default (
-             ...
-             :jump/next-error flymake-goto-next-error
-             :jump/prev-error flymake-goto-prev-error
-             ...
-             :project/diagnostics flymake-show-buffer-diagnostics 
-             ...
-             )))
-
-#+end_src
-
-*Note:* The above are just /suggestions/. You can define whatever bindings and
- signals you find most conenient. The precise default key bindings for ~corgi~ and
- the specific mechanism for extension packages to add or update bindings is
- still being worked through. This README will be updated once more concrete
- suggestions are formulated.
+signals introduced by an extension package for corgi. The above is a temporary hack 
+which will be replaced with something more maintainable at some point in the future. 
 
 ** Issues
 

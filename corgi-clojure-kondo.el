@@ -25,8 +25,11 @@
 (use-package flymake-kondor
   :after (flymake)
   :config
+  (setq *key-files-list* (cons 'corgi-kondo-keys *key-files-list*)
+        *signal-files-list* (cons 'corgi-kondo-signals *signal-files-list*))
   (add-hook 'clojure-mode-hook (lambda ()
 	                         (flymake-kondor-setup))))
+
 (provide 'corgi-clojure-kondo)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; corgi-clojure-kondo.el ends here
