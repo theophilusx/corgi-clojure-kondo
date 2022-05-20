@@ -11,9 +11,13 @@ As ~corgi~ uses [[https://github.com/radian-software/straight.el][straight.el]] 
 #+begin_src emacs-lisp
   (use-package corgi-clojure-kondo
     :straight (:host github :repo "theophilusx/corgi-clojure-kondo")
-    :hook ((clojure-mode . (lambda () (flymake-mode +1)))))
+    :hook ((clojure-mode . (lambda () (flymake-mode +1))))
+    :config
+    (corgi-clojure-kondo/load-default-bindings))
 
 #+end_src
+
+** Key Bindings
 
 This package also sets up some key bindings. However, the current implementation
 is a definite /hack/, but seems to work OK. Once we have something a little more
